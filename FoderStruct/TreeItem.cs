@@ -17,8 +17,12 @@ namespace FoderStruct
     {
         string name;
         List<TreeItem> children;
-
+        
         public State State { get; set; }
+
+        public int Weight { get; set; }
+
+        public List<TreeItem> Children { get { return children; } }
 
         public TreeItem(string name)
         {
@@ -29,6 +33,6 @@ namespace FoderStruct
 
         public void AddChild(TreeItem c) => children.Add(c);
 
-        public override string ToString() => $"name: {name}, direct subfolders: {children.Count}, state: {State.ToString()}";
+        public override string ToString() => $"name: {name}, direct subfolders: {Children.Count}, state: {State.ToString()}";
     }
 }

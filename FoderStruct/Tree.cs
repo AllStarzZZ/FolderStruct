@@ -17,10 +17,12 @@ namespace FoderStruct
             List<string> readableFolders,
             List<string> writableFolders)
         {
-            throw new NotImplementedException();
+            BuildDictionaries(readableFolders, writableFolders);
+            CalculateWeightForEachNode();
+            return root;
         }
 
-        public void BuildDictionaries(
+        void BuildDictionaries(
             List<string> readableFolders,
             List<string> writableFolders)
         {
@@ -65,6 +67,23 @@ namespace FoderStruct
                     Console.WriteLine(e.StackTrace);
                 }
             }
+        }
+
+        void CalculateWeightForEachNode()
+        {
+            DepthFirstSearch(root);
+        }
+
+        int DepthFirstSearch(TreeItem node)
+        {
+            int currentWeight = (int)node.State;
+            foreach (TreeItem child in node.Children)
+            {
+                currentWeight += DepthFirstSearch(child);
+            }
+            node.Weight = currentWeight;
+            
+            return currentWeight;
         }
 
         string GetPartentDir(string path) => path.Substring(0, path.Length - (path.Length - path.LastIndexOf('/')));

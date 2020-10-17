@@ -30,7 +30,7 @@ namespace FoderStruct
         {
             Tree tree = new Tree();
             //tree.GetWritableFolderStructure(null, null);
-            tree.BuildDictionaries(fread1, fwrite1);
+            tree.GetWritableFolderStructure(fread1, fwrite1);
             ;
         }
     }
