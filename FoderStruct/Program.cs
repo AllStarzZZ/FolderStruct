@@ -8,8 +8,30 @@ namespace FoderStruct
 {
     class Program
     {
+        static List<string> fread1 = new List<string>() {
+            "/var",
+            "/var/a",
+            "/var/www",
+            "/etc/pw",
+            "/var/b",
+            "/var/b/c",
+            "/var/www/abc",
+            "/var/asd/g",
+            "/var/www/cba"
+        };
+
+        static List<string> fwrite1 = new List<string>() {
+            "/var/a",
+            "/var/b/c",
+            "/var/www/abc",
+        };
+
         static void Main(string[] args)
         {
+            Tree tree = new Tree();
+            //tree.GetWritableFolderStructure(null, null);
+            tree.BuildDictionaries(fread1, fwrite1);
+            ;
         }
     }
 }
