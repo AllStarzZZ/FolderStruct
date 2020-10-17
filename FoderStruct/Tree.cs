@@ -71,9 +71,13 @@ namespace FoderStruct
                 try
                 {
                     folderDictionary[path].State = State.Writeable;
-                }catch(Exception e)
+                }catch(KeyNotFoundException)
                 {
-                    Console.WriteLine(e.StackTrace);
+                    Console.WriteLine($"Writeable, but has non readable parent, path: " + path);
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Unknown exception: " + e.GetType());
                 }
             }
         }

@@ -17,13 +17,26 @@ namespace FoderStruct
             "/var/b/c",
             "/var/www/abc",
             "/var/asd/g",
-            "/var/www/cba"
+            "/var/www/cba",
+            "/var/b/c/d",
+            "/var/b/c/d/e",
+            "/var/b/c/d/f",
+            "/var/b/c/d/e/g",
+            "/var/b/c/d/e/k",
+            "/var/sec/vis",
+            "/var/sec/moresec/secread",
+            "/var/er1",
+            "/var/er1/er2",
+            "/var/er1/er2/er3",
         };
 
         static List<string> fwrite1 = new List<string>() {
             "/var/a",
             "/var/b/c",
             "/var/www/abc",
+            "/var/b/c/d/e/g",
+            "/var/b/c/d/e/k",
+            "/var/sec/vis",
         };
 
         static void Main(string[] args)
