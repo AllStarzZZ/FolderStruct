@@ -17,12 +17,21 @@ namespace FoderStruct
             List<string> readableFolders,
             List<string> writableFolders)
         {
-            BuildDictionaries(readableFolders, writableFolders);
+            BuildDictionary(readableFolders, writableFolders);
             CalculateWeightForEachNode();
+            RemoveNodesWithZeroWeight();
+
             return root;
         }
 
-        void BuildDictionaries(
+        public void ShowStructure(TreeItem root)
+        {
+            Queue<TreeItem> itemQ = new Queue<TreeItem>();
+            itemQ.Enqueue(root);
+            BreadthFirstSearch(itemQ, (TreeItem item) => Console.WriteLine(item.Name));
+        }
+
+        private void BuildDictionary(
             List<string> readableFolders,
             List<string> writableFolders)
         {
@@ -69,12 +78,12 @@ namespace FoderStruct
             }
         }
 
-        void CalculateWeightForEachNode()
+        private void CalculateWeightForEachNode()
         {
             DepthFirstSearch(root);
         }
 
-        int DepthFirstSearch(TreeItem node)
+        private int DepthFirstSearch(TreeItem node)
         {
             int currentWeight = (int)node.State;
             foreach (TreeItem child in node.Children)
@@ -86,6 +95,33 @@ namespace FoderStruct
             return currentWeight;
         }
 
-        string GetPartentDir(string path) => path.Substring(0, path.Length - (path.Length - path.LastIndexOf('/')));
+        private void RemoveNodesWithZeroWeight()
+        {
+            Queue<TreeItem> itemQ = new Queue<TreeItem>();
+
+            itemQ.Enqueue(root);
+            BreadthFirstSearch(itemQ, (TreeItem item) =>
+            {
+                if(item.Weight == 0)
+                {
+                    folderDictionary[GetPartentDir(item.Name)].Children.Remove(item);
+                }
+            });
+        }
+
+        private void BreadthFirstSearch(Queue<TreeItem> itemQ, Action<TreeItem> process)
+        {
+            while(itemQ.Count != 0)
+            {
+                TreeItem currentNode = itemQ.Dequeue();
+                process(currentNode);
+                foreach (TreeItem child in currentNode.Children)
+                {
+                    itemQ.Enqueue(child);
+                }
+            }
+        }
+
+        private string GetPartentDir(string path) => path.Substring(0, path.Length - (path.Length - path.LastIndexOf('/')));
     }
 }

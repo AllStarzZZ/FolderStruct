@@ -29,8 +29,8 @@ namespace FoderStruct
         static void Main(string[] args)
         {
             Tree tree = new Tree();
-            //tree.GetWritableFolderStructure(null, null);
-            tree.GetWritableFolderStructure(fread1, fwrite1);
+            TreeItem root = tree.GetWritableFolderStructure(fread1, fwrite1);
+            tree.ShowStructure(root);
             ;
         }
     }
