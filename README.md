@@ -1,7 +1,7 @@
 # FolderStruct
 
 Cél:
-- könyvtár fa struktúra építése a felhasználó által írható és olvasható útvonalak tartalmazó listából
+- könyvtár fa struktúra építése a felhasználó által írható és olvasható útvonalak tartalmazó listákból
 
 Megkötések:
 - a fa nem tartalmazhat olyan elemet, ami se nem írható se nem olvasható
