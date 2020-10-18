@@ -11,6 +11,7 @@ namespace FoderStruct
         static List<string> fread1 = new List<string>() {
             "/var",
             "/var/a",
+            "/var/a",
             "/var/www",
             "/etc/pw",
             "/var/b",

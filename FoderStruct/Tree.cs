@@ -17,53 +17,62 @@ namespace FoderStruct
             List<string> readableFolders,
             List<string> writableFolders)
         {
+            ValidateInputList(readableFolders);
+            ValidateInputList(writableFolders);
+
             BuildDictionary(readableFolders, writableFolders);
-            CalculateWeightForEachNode();
+            CalculateWeightForEachNode(root);
             RemoveNodesWithZeroWeight();
 
             return root;
         }
 
-        public void ShowStructure(TreeItem root)
-        {
-            Queue<TreeItem> itemQ = new Queue<TreeItem>();
-            itemQ.Enqueue(root);
-            BreadthFirstSearch(itemQ, (TreeItem item) => Console.WriteLine(item.Name));
-        }
-
+        // build a dictionary where each node can be access via it's absolute path
+        // this speed up the seach when we try to find the parent directory
         private void BuildDictionary(
             List<string> readableFolders,
             List<string> writableFolders)
         {
             int lastCount = 0;
+            readableFolders.Sort();
+
             do
             {
                 lastCount = readableFolders.Count;
-                List<string> shouldExcept = new List<string>();
+                List<string> registeredDirectories = new List<string>();
 
                 foreach (string path in readableFolders)
                 {
+                    // select the only one root directory
+                    // should only run once
                     if (path.LastIndexOf(Separator) == 0)
                     {
                         TreeItem tmp = new TreeItem(path);
                         folderDictionary.Add(path, tmp);
                         root = tmp;
-                        shouldExcept.Add(path);
+                        registeredDirectories.Add(path);
                     }
                     else
                     {
-                        string parent = GetPartentDir(path);
+                        string parent = GetParentDir(path);
                         if (folderDictionary.ContainsKey(parent))
                         {
-                            TreeItem tmp = new TreeItem(path);
-                            folderDictionary[parent].AddChild(tmp);
-                            folderDictionary.Add(path, tmp);
-                            shouldExcept.Add(path);
+                            try
+                            {
+                                TreeItem tmp = new TreeItem(path);
+                                folderDictionary.Add(path, tmp);
+                                folderDictionary[parent].AddChild(tmp);
+                                registeredDirectories.Add(path);
+                            }
+                            catch (ArgumentException)
+                            {
+                                Console.WriteLine($"Path: ({path}) is already in the dictionary, this instance ignored.");
+                            }
                         }
                     }
                 }
 
-                readableFolders = readableFolders.Except(shouldExcept).ToList();
+                readableFolders = readableFolders.Except(registeredDirectories).ToList();
             } while (lastCount != readableFolders.Count && lastCount != 0);
 
             foreach (string path in writableFolders)
@@ -71,28 +80,20 @@ namespace FoderStruct
                 try
                 {
                     folderDictionary[path].State = State.Writeable;
-                }catch(KeyNotFoundException)
+                }catch (KeyNotFoundException)
                 {
-                    Console.WriteLine($"Writeable, but has non readable parent, path: " + path);
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine("Unknown exception: " + e.GetType());
+                    Console.WriteLine($"Writeable, but has non readable parent, path: {path}");
                 }
             }
         }
 
-        private void CalculateWeightForEachNode()
-        {
-            DepthFirstSearch(root);
-        }
-
-        private int DepthFirstSearch(TreeItem node)
+        // using depth first search implemented by a recursive method
+        private int CalculateWeightForEachNode(TreeItem node)
         {
             int currentWeight = (int)node.State;
             foreach (TreeItem child in node.Children)
             {
-                currentWeight += DepthFirstSearch(child);
+                currentWeight += CalculateWeightForEachNode(child);
             }
             node.Weight = currentWeight;
             
@@ -101,14 +102,14 @@ namespace FoderStruct
 
         private void RemoveNodesWithZeroWeight()
         {
-            Queue<TreeItem> itemQ = new Queue<TreeItem>();
+            Queue<TreeItem> itemQueue = new Queue<TreeItem>();
 
-            itemQ.Enqueue(root);
-            BreadthFirstSearch(itemQ, (TreeItem item) =>
+            itemQueue.Enqueue(root);
+            BreadthFirstSearch(itemQueue, (TreeItem item) =>
             {
                 if(item.Weight == 0)
                 {
-                    folderDictionary[GetPartentDir(item.Name)].Children.Remove(item);
+                    folderDictionary[GetParentDir(item.Name)].Children.Remove(item);
                 }
             });
         }
@@ -126,6 +127,26 @@ namespace FoderStruct
             }
         }
 
-        private string GetPartentDir(string path) => path.Substring(0, path.Length - (path.Length - path.LastIndexOf('/')));
+        private void ValidateInputList(List<string> input)
+        {
+            foreach (string path in input)
+            {
+                if(!path.StartsWith("/") ||
+                    path.EndsWith("/") ||
+                    path.Contains("\\"))
+                {
+                    throw new BadInputFormatException(path);
+                }
+            }
+        }
+
+        public void ShowStructure(TreeItem root)
+        {
+            Queue<TreeItem> itemQ = new Queue<TreeItem>();
+            itemQ.Enqueue(root);
+            BreadthFirstSearch(itemQ, (TreeItem item) => Console.WriteLine(item.Name));
+        }
+
+        private string GetParentDir(string path) => path.Substring(0, path.Length - (path.Length - path.LastIndexOf('/')));
     }
 }

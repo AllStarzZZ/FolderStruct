@@ -15,6 +15,7 @@ namespace FoderStruct
     class TreeItem
     {
         string name;
+
         List<TreeItem> children;
 
         public string Name { get { return name; }}
