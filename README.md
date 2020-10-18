@@ -16,3 +16,11 @@ Megvalósítás:
   - a fa elemet olvashatóként jönnek létre, ezért végigmegyünk az írható listán és beállítjuk a megfelelő mappákat írhatóra
 - az így létrejött fán mélységi bejárással meghatározzuk minden elem súlyát, ami minden írható leszármazott után +1, önmagát is beleértve
 - szélességi bejárással töröljük azokat az elemeket amiknek 0 a súlya (vagyis amik nem tartalmaznak írható mappát és önmaguk sem írhatóak)
+- szintaktikailag érvénytelen bemenetre leáll a program elkapott kivétellel
+
+A mainben definiált listák lefedik a következő eseteket:
+- csak olvasható levél elem
+- olvasható elem majd írható leszármazottal
+- két írható leszármazott között csak olvasható elemek
+- rejtett elem írható és olvasható leszármazottal
+- bemeneten útvonal duplikáció
