@@ -42,10 +42,16 @@ namespace FoderStruct
 
         static void Main(string[] args)
         {
-            Tree tree = new Tree();
-            TreeItem root = tree.GetWritableFolderStructure(fread1, fwrite1);
-            tree.ShowStructure(root);
-            ;
+            try
+            {
+                Tree tree = new Tree();
+                TreeItem root = tree.GetWritableFolderStructure(fread1, fwrite1);
+                tree.ShowStructure(root);
+            }
+            catch (BadInputFormatException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
     }
 }
