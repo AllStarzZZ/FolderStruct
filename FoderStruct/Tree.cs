@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace FoderStruct
 {
-    class Tree
+    public class Tree
     {
         static readonly char Separator = '/';
 
         TreeItem root;
         Dictionary<string, TreeItem> folderDictionary;
+
+        public int ValidTreeItems { get; set; }
 
         public Tree()
         {
@@ -38,6 +40,12 @@ namespace FoderStruct
             List<string> readableFolders,
             List<string> writableFolders)
         {
+            if (readableFolders.Count == 0)
+            {
+                root = new TreeItem("/root");
+                return;
+            }
+
             int lastCount = 0;
             readableFolders.Sort();
 
@@ -55,6 +63,8 @@ namespace FoderStruct
                         TreeItem tmp = new TreeItem(path);
                         folderDictionary.Add(path, tmp);
                         root = tmp;
+                        ValidTreeItems++;
+
                         registeredDirectories.Add(path);
                     }
                     else
@@ -67,6 +77,8 @@ namespace FoderStruct
                                 TreeItem tmp = new TreeItem(path);
                                 folderDictionary.Add(path, tmp);
                                 folderDictionary[parent].AddChild(tmp);
+                                ValidTreeItems++;
+
                                 registeredDirectories.Add(path);
                             }
                             catch (ArgumentException)
@@ -115,6 +127,7 @@ namespace FoderStruct
                 if(item.Weight == 0)
                 {
                     folderDictionary[GetParentDir(item.Name)].Children.Remove(item);
+                    ValidTreeItems--;
                 }
             });
         }

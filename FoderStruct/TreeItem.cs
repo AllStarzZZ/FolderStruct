@@ -12,7 +12,7 @@ namespace FoderStruct
         Writeable = 1
     }
 
-    class TreeItem
+    public class TreeItem
     {
         string name;
 
