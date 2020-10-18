@@ -11,7 +11,12 @@ namespace FoderStruct
         static readonly char Separator = '/';
 
         TreeItem root;
-        Dictionary<string, TreeItem> folderDictionary = new Dictionary<string, TreeItem>();
+        Dictionary<string, TreeItem> folderDictionary;
+
+        public Tree()
+        {
+            folderDictionary = new Dictionary<string, TreeItem>();
+        }
 
         public TreeItem GetWritableFolderStructure(
             List<string> readableFolders,
@@ -114,15 +119,15 @@ namespace FoderStruct
             });
         }
 
-        private void BreadthFirstSearch(Queue<TreeItem> itemQ, Action<TreeItem> process)
+        private void BreadthFirstSearch(Queue<TreeItem> treeItemQueue, Action<TreeItem> process)
         {
-            while(itemQ.Count != 0)
+            while(treeItemQueue.Count != 0)
             {
-                TreeItem currentNode = itemQ.Dequeue();
+                TreeItem currentNode = treeItemQueue.Dequeue();
                 process(currentNode);
                 foreach (TreeItem child in currentNode.Children)
                 {
-                    itemQ.Enqueue(child);
+                    treeItemQueue.Enqueue(child);
                 }
             }
         }
@@ -142,9 +147,9 @@ namespace FoderStruct
 
         public void ShowStructure(TreeItem root)
         {
-            Queue<TreeItem> itemQ = new Queue<TreeItem>();
-            itemQ.Enqueue(root);
-            BreadthFirstSearch(itemQ, (TreeItem item) => Console.WriteLine(item.Name));
+            Queue<TreeItem> treeItemQueue = new Queue<TreeItem>();
+            treeItemQueue.Enqueue(root);
+            BreadthFirstSearch(treeItemQueue, (TreeItem item) => Console.WriteLine(item.Name));
         }
 
         private string GetParentDir(string path) => path.Substring(0, path.Length - (path.Length - path.LastIndexOf('/')));
